@@ -16,5 +16,5 @@ class Item(models.Model):
     discount = models.FloatField()
     item_slug = models.SlugField(max_length=255, unique=True)
     description = RichTextField
-    image = models.ImageField(upload_to='/img')
+    image = models.ImageField(upload_to='img/')
 
