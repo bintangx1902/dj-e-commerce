@@ -128,8 +128,47 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [join(BASE_DIR, 'static')]
+STATIC_ROOT = join(BASE_DIR, 'static/root')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CKEditor configurations
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'width': '100%',
+
+        'youtube_responsive': 'true',
+        'youtube_controls': 'true',
+        'youtube_disabled_fields': ['txtHeight', 'txtWidth', 'chkOlderCode',],
+        'extraPlugins': ','.join([
+            'youtube',
+            # 'bootstrap',
+        ])
+    },
+    'special': {
+        'toolbar': 'Special',
+        'toolbar_Special': [
+            ['Bold', 'Italic', 'Underline', 'Strike', 'AlignLeft', 'Subscript', 'Superscript', ],
+            ['Source']
+        ],
+    },
+    'comment': {
+        'toolbar': 'Special',
+        'toolbar_Special': [
+            ['Bold', 'Italic', 'Underline', 'Strike', 'AlignLeft', ],
+            # ['NumberedList', 'BulletedList', ],
+            # ['Indent', 'Outdent', 'Blockquote', ],
+            # ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'BidiLtr', 'BidiRtl', ],
+            ['Font', 'FontSize'],
+            ['Source']
+        ],
+    },
+}
