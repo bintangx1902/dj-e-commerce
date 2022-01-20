@@ -6,12 +6,13 @@ from .models import Item
 class HomeLandingView(ListView):
     model = Item
     paginate_by = 10
-    template_name = None
+    ordering = ['-id']
+    template_name = 'core/item_list.html'
 
 
 class ItemDetailView(DetailView):
     model = Item
-    template_name = None
+    template_name = ''
     query_pk_and_slug = True
     slug_field = 'item_slug'
     slug_url_kwarg = 'item_slug'

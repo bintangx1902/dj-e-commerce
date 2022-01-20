@@ -68,7 +68,7 @@ ROOT_URLCONF = 'dj_commerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [join(BASE_DIR, 'templates')],
+        'DIRS': [join(BASE_DIR, 'templates'), join(BASE_DIR, 'templates', 'allauth')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +147,7 @@ CKEDITOR_CONFIGS = {
 
         'youtube_responsive': 'true',
         'youtube_controls': 'true',
-        'youtube_disabled_fields': ['txtHeight', 'txtWidth', 'chkOlderCode',],
+        'youtube_disabled_fields': ['txtHeight', 'txtWidth', 'chkOlderCode', ],
         'extraPlugins': ','.join([
             'youtube',
             # 'bootstrap',
