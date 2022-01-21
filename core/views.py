@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import *
-from .models import Item
+from .forms import *
 
 item_slug = 'item_slug'
 
@@ -21,12 +21,17 @@ class ItemDetailView(DetailView):
 
 
 class CreateItemViews(CreateView):
+    template_name = "core/forms.html"
     model = Item
-    template_name = None
-    form_class = None
+    form_class = CreateItemForms
 
     def get_success_url(self):
         return
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateItemViews, self).get_context_data(**kwargs)
+        # context['title'] = "Create Item"
+        return context
 
 
 class UpdateItemViews(UpdateView):

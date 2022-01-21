@@ -19,7 +19,9 @@ class Item(models.Model):
     description = RichTextField(config_name='default',
                                 verbose_name='Product Description ',
                                 external_plugin_resources=[
-                                    ('youtube', '/static/ckeditor_plugins/youtube/youtube/plugin.js')
+                                    ('youtube',
+                                     '/static/ckeditor_plugins/youtube/youtube/',
+                                     'plugin.js')
                                 ],
                                 default='')
     image = models.ImageField(upload_to='img/')
