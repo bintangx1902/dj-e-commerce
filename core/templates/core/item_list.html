@@ -3,7 +3,21 @@
 {% block title %} Item List Page {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="jumbotron"></div>
-</div>
+    <div class="container">
+        <div class="jumbotron">
+            {% for item in items %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                </div>
+                <div class="card-body">
+
+                    <p class="card-text">{{ item.description | safe }}</p>
+                    <a href="#" class="btn btn-primary">View</a>
+                    <a href="{% url 'core:item-update' item.item_slug %}" class="btn btn-primary">Update</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
