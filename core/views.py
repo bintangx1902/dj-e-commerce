@@ -1,6 +1,7 @@
 from django.shortcuts import render, reverse, redirect
 from django.views.generic import *
 from .forms import *
+from django.http import HttpResponseRedirect
 
 item_slug = 'item_slug'
 bad_chars = [';', ':', '!', "*", '!', '@', '#', '$', '%', '^', '&', '(', ')']
@@ -44,7 +45,7 @@ class CreateItemViews(CreateView):
     form_class = CreateItemForms
 
     def get_success_url(self):
-        return redirect('core:home')
+        return reverse('core:home')
 
     def form_valid(self, form):
         link: str = form.cleaned_data['title']
@@ -74,4 +75,21 @@ class UpdateItemViews(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(UpdateItemViews, self).get_context_data(**kwargs)
         context['title'] = 'Update'
+        return context
+
+
+class ItemDeleteView(DeleteView):
+    model = Item
+    template_name = 'core/forms.html'
+    query_pk_and_slug = True
+    slug_url_kwarg = item_slug
+    slug_field = item_slug
+
+    def get_success_url(self):
+        return reverse('core:home')
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDeleteView, self).get_context_data(**kwargs)
+        context['title'] = "Delete Item "
+        context['delete'] = True
         return context

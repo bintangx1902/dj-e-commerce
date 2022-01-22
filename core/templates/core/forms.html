@@ -12,10 +12,17 @@
                 {{ form.media }}
                 {% csrf_token %}
                 {{ form | crispy }}
+                {% if delete %}
                 <div class="form-group">
-                    <button class="btn btn-primary">
-                        save
-                    </button>
+                    <h2>{{ item.title }}</h2>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    {% if not delete %}
+                    <button class="btn btn-primary">save</button>
+                    {% else %}
+                    <button class="btn btn-danger">Delete</button>
+                    {% endif %}
                 </div>
             </form>
         </div>

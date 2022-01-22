@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from django.conf import settings
+from os import remove, path
 
 
 class UserProfile(models.Model):
@@ -31,6 +32,10 @@ class Item(models.Model):
 
     def get_add_to_cart_url(self):
         return
+
+    def delete(self, using=None, *args, **kwargs):
+        remove(path.join(settings.MEDIA_ROOT, self.image.name))
+        super().delete(*args, **kwargs)
 
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
