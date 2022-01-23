@@ -13,19 +13,19 @@ class UserProfile(models.Model):
 
 
 class Item(models.Model):
-    title = models.CharField(max_length=255)
-    price = models.FloatField()
-    discount = models.FloatField()
+    title = models.CharField(max_length=255, verbose_name='Nama Produk : ')
+    price = models.FloatField(verbose_name="Harga Asli : ")
+    discount = models.FloatField(verbose_name="Harga yang akan di jual : ")
     item_slug = models.SlugField(max_length=255, unique=True)
     description = RichTextField(config_name='default',
-                                verbose_name='Product Description ',
+                                verbose_name='Deskripsi Produk : ',
                                 external_plugin_resources=[
                                     ('youtube',
                                      '/static/ckeditor_plugins/youtube/youtube/',
                                      'plugin.js')
                                 ],
                                 default='')
-    image = models.ImageField(upload_to='img/')
+    image = models.ImageField(upload_to='img/', verbose_name="Poto Terkait Produk : ")
 
     def __str__(self):
         return self.title
