@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ item.title }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-10 col-lg-10">
+<div class="row my-5">
+    <div class="mx-auto col-10 col-lg-10">
         <div class="card">
-            <h5 class="card-header"><a href="" class="btn btn-primary">Update</a></h5>
+            <h5 class="card-header">
+                <a href="" class="btn btn-primary">Update</a>
+                <a href="" class="btn btn-secondary">&#8592; Back</a>
+            </h5>
             <div class="card-body">
-
+                {{ item.description | safe }}
+                <p class="text-bold">
+                    Price :
+                    {% if item.discount != 0 %}
+                    <del>{{ item.price }}</del> &nbsp; {{ item.discount }}
+                    {% else %}
+                    {{ item.price }}
+                    {% endif %}
+                </p>
             </div>
         </div>
     </div>
