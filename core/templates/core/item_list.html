@@ -13,7 +13,7 @@
                 <div class="card-body">
 
                     <p class="card-text">{{ item.description | safe }}</p>
-                    <a href="#" class="btn btn-primary">View</a>
+                    <a href="{% url 'core:item-detail' item.item_slug %}" class="btn btn-primary">View</a>
                     <a href="{% url 'core:item-update' item.item_slug %}" class="btn btn-primary">Update</a>
                     <a href="{% url 'core:item-delete' item.item_slug %}" class="btn btn-danger">Delete</a>
                 </div>

@@ -8,19 +8,20 @@ bad_chars = [';', ':', '!', "*", '!', '@', '#', '$', '%', '^', '&', '(', ')']
 
 
 def bad_chars_check(link: str):
-    if bad_chars[-3] in link:
-        link = link.replace(bad_chars[-3], 'n')
+    link_ = link
+    if bad_chars[-3] in link_:
+        link_ = link_.replace(bad_chars[-3], 'n')
 
     for x in bad_chars:
-        link = link.replace(x, '')
+        link_ = link_.replace(x, '')
 
     while True:
-        if link[-1] == '-':
-            link = link[:-1]
+        if link_[-1] == '-':
+            link_ = link_[:-1]
         else:
             break
 
-    return link
+    return link_
 
 
 class HomeLandingView(ListView):
@@ -33,7 +34,7 @@ class HomeLandingView(ListView):
 
 class ItemDetailView(DetailView):
     model = Item
-    template_name = ''
+    template_name = 'core/item_detail.html'
     query_pk_and_slug = True
     slug_field = item_slug
     slug_url_kwarg = item_slug
