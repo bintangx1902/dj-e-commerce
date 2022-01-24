@@ -7,9 +7,10 @@ item_slug = 'item_slug'
 
 class HomeView(ListView):
     model = Item
-    template_name = None
+    template_name = 'com/home.html'
     paginate_by = 50
     ordering = ['-pk']
+    context_object_name = 'items'
 
 
 class ItemDetailView(DetailView):

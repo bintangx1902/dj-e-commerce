@@ -3,4 +3,36 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
+<div class="row mx-auto my-5">
+    <div class="col-10 col-lg-10  mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <a href="" class="btn btn-primary">Shop Cart - </a>
+            </div>
+            <div class="card-body">
+                <div class="row mx-auto my-3">
+                    <div class="col-9 col-lg-9 mx-auto">
+                        {% for item in items %}
+                        <div class="card mb-3" style="">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="{{ item.image.url }}" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title"> Title </h5>
+                                        <p class="card-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet deserunt enim excepturi illo illum optio quis reiciendis sapiente voluptatibus? Culpa enim incidunt laboriosam laborum optio quod ratione sint sit veritatis!</span><span>Blanditiis commodi consectetur delectus dolore doloribus eaque eum excepturi impedit in iste, magni nesciunt numquam perspiciatis, quam quas quo reiciendis repellat repellendus sapiente vitae? Beatae labore modi placeat sequi voluptatum?</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
