@@ -21,12 +21,15 @@
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title"> {{ item.title }} </h5>
-                                        <p class="card-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet deserunt enim excepturi illo illum optio quis reiciendis sapiente voluptatibus? Culpa enim incidunt laboriosam laborum optio quod ratione sint sit veritatis!</span><span>Blanditiis commodi consectetur delectus dolore doloribus eaque eum excepturi impedit in iste, magni nesciunt numquam perspiciatis, quam quas quo reiciendis repellat repellendus sapiente vitae? Beatae labore modi placeat sequi voluptatum?</span>
-                                        </p>
+                                        <p class="card-text">{{ item.description | safe }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="card-footer">
+                                        <a href="" class="btn btn-primary">Add To Cart</a>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         {% endfor %}
                     </div>
