@@ -1,8 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.views.generic import *
 from core.models import Item
-
-item_slug = 'item_slug'
 
 
 class HomeView(ListView):
@@ -17,7 +15,10 @@ class ItemDetailView(DetailView):
     model = Item
     template_name = None
     query_pk_and_slug = True
-    slug_field = item_slug
-    slug_url_kwarg = item_slug
+    slug_field = 'item_slug'
+    slug_url_kwarg = 'item_slug'
 
+
+def add_to_cart(request, item_slug):
+    item = get_object_or_404(Item, item_slug=item_slug)
 
