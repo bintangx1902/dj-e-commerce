@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from django.conf import settings
 from os import remove, path
+from django.urls import reverse
 
 
 class UserProfile(models.Model):
@@ -26,12 +27,19 @@ class Item(models.Model):
                                 ],
                                 default='')
     image = models.ImageField(upload_to='img/', verbose_name="Poto Terkait Produk : ")
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
 
     def get_add_to_cart_url(self):
         return
+
+    def get_absolute_url(self):
+        return reverse('com:item-detail', kwargs={'item_slug': self.item_slug})
+
+    def get_add_to_cart_url(self):
+        return reverse('com:add-to-cart', kwargs={'item_slug': self.item_slug})
 
     def delete(self, using=None, *args, **kwargs):
         remove(path.join(settings.MEDIA_ROOT, self.image.name))
@@ -40,6 +48,7 @@ class Item(models.Model):
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.item.title
