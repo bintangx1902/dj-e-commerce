@@ -1,2 +1,22 @@
 {% extends 'base.html' %}
 
+{% block title %} {{ item.title }} {% endblock %}
+
+{% block content %}
+<div class="row mx-auto my-5">
+    <div class="col-10 col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <img src="{{ item.image.url }}" alt="Product Image" class="img-fluid">
+                <div class="card-text">
+                    {{ item.description | safe }}
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <a href="" class="btn btn-primary"> Add To Cart </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

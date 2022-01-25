@@ -13,10 +13,11 @@ class HomeView(ListView):
 
 class ItemDetailView(DetailView):
     model = Item
-    template_name = None
+    template_name = 'com/item.html'
     query_pk_and_slug = True
     slug_field = 'item_slug'
     slug_url_kwarg = 'item_slug'
+    context_object_name = 'item'
 
 
 def add_to_cart(request, item_slug):
