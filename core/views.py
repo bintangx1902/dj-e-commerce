@@ -1,13 +1,20 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render
 from django.views.generic import *
 from .forms import *
-from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.views import login_required
 
 item_slug = 'item_slug'
 bad_chars = [';', ':', '!', "*", '!', '@', '#', '$', '%', '^', '&', '(', ')']
 
 
 def bad_chars_check(link: str):
+    """
+    this function used to creating url.
+    stored in the string like 'hai there'
+    in changed to 'hai-there'
+    """
+
     link_ = link
     if bad_chars[-3] in link_:
         link_ = link_.replace(bad_chars[-3], 'n')
@@ -31,6 +38,10 @@ class HomeLandingView(ListView):
     context_object_name = 'items'
     template_name = 'core/item_list.html'
 
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(HomeLandingView, self).dispatch(request, *args, **kwargs)
+
 
 class ItemDetailView(DetailView):
     model = Item
@@ -38,6 +49,10 @@ class ItemDetailView(DetailView):
     query_pk_and_slug = True
     slug_field = item_slug
     slug_url_kwarg = item_slug
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(ItemDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class CreateItemViews(CreateView):
@@ -61,6 +76,10 @@ class CreateItemViews(CreateView):
         context['title'] = "Create Item"
         return context
 
+    @method_decorator(login_required(login_url='/accounts.login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(CreateItemViews, self).dispatch(request, *args, **kwargs)
+
 
 class UpdateItemViews(UpdateView):
     model = Item
@@ -78,6 +97,10 @@ class UpdateItemViews(UpdateView):
         context['title'] = 'Update'
         return context
 
+    @method_decorator(login_required(login_url='/accuonts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UpdateItemViews, self).dispatch(request, *args, **kwargs)
+
 
 class ItemDeleteView(DeleteView):
     model = Item
@@ -94,3 +117,7 @@ class ItemDeleteView(DeleteView):
         context['title'] = "Delete Item "
         context['delete'] = True
         return context
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(ItemDeleteView, self).dispatch(request, *args, **kwargs)

@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404, reverse
 from django.views.generic import *
 from core.models import Item, OrderItem, Order
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 
@@ -51,3 +50,5 @@ def add_to_cart(request, item_slug):
 
 def remove_from_cart(request, item_slug):
     item = get_object_or_404(Item, item_slug=item_slug)
+
+    return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
