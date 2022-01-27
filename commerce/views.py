@@ -58,7 +58,7 @@ def remove_from_cart(request, item_slug):
     if order_qs.exists():
         order = order_qs.first()
         if order.item.filter(item__item_slug=item.item_slug).exists():
-            order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False)
+            order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False).first()
             order.item.remove(order_item)
             messages.info(request, "This item was removed from your cart")
         else:
