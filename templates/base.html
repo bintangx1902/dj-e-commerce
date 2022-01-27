@@ -14,6 +14,7 @@
     {% block head %}
     {% endblock %}
 </head>
+
 <body>
     <section class="mb-5">
         <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
@@ -30,6 +31,21 @@
             </div>
         </nav>
     </section>
+
+
+    {% if messages %}
+        <div class="mt-5 pt-4">
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} alert-dismissible">
+                {{ msg }}
+                <button class="close" type="button" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
 
     {% block content %}
     {% endblock %}
