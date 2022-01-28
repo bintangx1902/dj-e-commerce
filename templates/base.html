@@ -1,4 +1,8 @@
 <!doctype html>
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load cart_template_tags %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -25,7 +29,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav ml-auto">
-                        <a href="" class="nav-link"><i class="far fa-shopping-cart"></i></a>
+                        <a href="" class="nav-link"><i class="far fa-shopping-cart"></i>{{ request.user | cart_item_counter }}</a>
                     </div>
                 </div>
             </div>
