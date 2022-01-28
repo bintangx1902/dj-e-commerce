@@ -27,7 +27,8 @@ class ItemDetailView(DetailView):
 
 class OrderSummaryView(ListView):
     model = Order
-    template_name = None
+    template_name = 'com/cart.html'
+    context_object_name = 'items'
 
     def get_queryset(self):
         return Order.objects.get(user=self.request.user, ordered=False)
@@ -39,6 +40,8 @@ class OrderSummaryView(ListView):
 
 @login_required(login_url='/accounts/login/')
 def add_to_cart(request, item_slug):
+    link = request.GET.get('url')
+
     item = get_object_or_404(Item, item_slug=item_slug)
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
@@ -62,6 +65,8 @@ def add_to_cart(request, item_slug):
         order.item.add(order_item)
         messages.info(request, "This item was added to your cart")
 
+    if link:
+        return HttpResponseRedirect(reverse('com:order-summary'))
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 
 
@@ -81,3 +86,16 @@ def remove_from_cart(request, item_slug):
         messages.info(request, "You dont have an active order")
 
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
+
+
+def reduce_item(request, item_slug):
+    item = get_object_or_404(Item, item_slug=item_slug)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs.first()
+        if order.item.filter(item__item_slug=item.item_slug).exists():
+            order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False).first()
+            order_item.quantity -= 1
+
+    return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
+

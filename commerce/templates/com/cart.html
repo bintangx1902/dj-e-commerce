@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div class="row mx-auto my-5">
+    <div class="col-10 col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <a href="" class="btn btn-primary">Back</a>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+
+                        <th scope="col">Name</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items.item.all %}
+                        <tr>
+                            <td>{{ item.item.title }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>
+                                <a href="{{ item.item.get_add_to_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-primary">+1</a>
+                                <a href="" class="btn btn-danger">-1</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
