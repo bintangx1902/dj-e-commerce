@@ -44,6 +44,9 @@ class Item(models.Model):
     def get_remove_from_cart_url(self):
         return reverse('com:remove-from-cart', kwargs={'item_slug': self.item_slug})
 
+    def get_reduce_item_url(self):
+        return reverse('com:reduce-item', kwargs={'item_slug': self.item_slug})
+
     def delete(self, using=None, *args, **kwargs):
         remove(path.join(settings.MEDIA_ROOT, self.image.name))
         super().delete(*args, **kwargs)

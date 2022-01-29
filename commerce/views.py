@@ -66,12 +66,13 @@ def add_to_cart(request, item_slug):
         messages.info(request, "This item was added to your cart")
 
     if link:
-        return HttpResponseRedirect(reverse('com:order-summary'))
+        return HttpResponseRedirect(redirect_to=link)
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 
 
 @login_required(login_url='accounts/login/')
 def remove_from_cart(request, item_slug):
+    url = request.GET.get('url')
     item = get_object_or_404(Item, item_slug=item_slug)
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
@@ -79,23 +80,37 @@ def remove_from_cart(request, item_slug):
         if order.item.filter(item__item_slug=item.item_slug).exists():
             order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False).first()
             order.item.remove(order_item)
+            order_item.delete()
             messages.info(request, "This item was removed from your cart")
         else:
             messages.info(request, "This item was not in your cart")
     else:
         messages.info(request, "You dont have an active order")
 
+    if url is not None:
+        return HttpResponseRedirect(redirect_to=url)
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 
 
 def reduce_item(request, item_slug):
+    url = request.GET.get('url')
     item = get_object_or_404(Item, item_slug=item_slug)
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs.first()
         if order.item.filter(item__item_slug=item.item_slug).exists():
             order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False).first()
+            if order_item.quantity == 1:
+                return reverse('com:remove-from-cart', kwargs={'item_slug': item_slug})
             order_item.quantity -= 1
+            order_item.save()
+            messages.info(request, "This item was reduce from your cart")
+        else:
+            messages.info(request, "This item was not in your cart")
+    else:
+        messages.info(request, "You dont have an active order")
 
+    if url is not None:
+        return HttpResponseRedirect(redirect_to=url)
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 

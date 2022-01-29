@@ -26,7 +26,8 @@
                             <td>{{ item.quantity }}</td>
                             <td>
                                 <a href="{{ item.item.get_add_to_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-primary">+1</a>
-                                <a href="" class="btn btn-danger">-1</a>
+                                <a href="{{ item.item.get_reduce_item_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger">-1</a>
+                                <a href="{{ item.item.get_remove_from_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger"> Remove </a>
                             </td>
                         </tr>
                         {% endfor %}
