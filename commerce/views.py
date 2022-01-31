@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, reverse
+from django.shortcuts import get_object_or_404, reverse, render
 from django.views.generic import *
 from core.models import Item, OrderItem, Order
 from django.contrib.auth.decorators import login_required
@@ -36,6 +36,12 @@ class OrderSummaryView(ListView):
     @method_decorator(login_required(login_url='accounts/login/'))
     def dispatch(self, request, *args, **kwargs):
         return super(OrderSummaryView, self).dispatch(request, *args, **kwargs)
+
+
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        # form here
+        return render(self.request, 'com/checkout.html' )
 
 
 @login_required(login_url='/accounts/login/')
