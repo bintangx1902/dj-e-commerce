@@ -41,7 +41,7 @@ class OrderSummaryView(ListView):
 class CheckoutView(View):
     def get(self, *args, **kwargs):
         # form here
-        return render(self.request, 'com/checkout.html' )
+        return render(self.request, 'com/checkout.html')
 
 
 @login_required(login_url='/accounts/login/')
@@ -119,4 +119,3 @@ def reduce_item(request, item_slug):
     if url is not None:
         return HttpResponseRedirect(redirect_to=url)
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
-
