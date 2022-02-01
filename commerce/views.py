@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, reverse, render
+from django.shortcuts import get_object_or_404, reverse, render, redirect
 from django.views.generic import *
 from core.models import Item, OrderItem, Order
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from .forms import CheckoutForm
 
 
 class HomeView(ListView):
@@ -40,8 +41,19 @@ class OrderSummaryView(ListView):
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
-        # form here
-        return render(self.request, 'com/checkout.html')
+        form = CheckoutForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, 'com/checkout.html', context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+
+        if form.is_valid():
+            return redirect('com:checkout')
+        messages.warning(self.request, "Checkout Failed")
+        return redirect('com:checkout')
 
 
 @login_required(login_url='/accounts/login/')
