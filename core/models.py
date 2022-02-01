@@ -4,6 +4,7 @@ from ckeditor.fields import RichTextField
 from django.conf import settings
 from os import remove, path
 from django.urls import reverse
+from django_countries.fields import CountryField
 
 
 class UserProfile(models.Model):
@@ -91,6 +92,17 @@ class Order(models.Model):
         for o_item in self.item.all():
             total += o_item.get_final_price()
         return total
+
+
+class BillingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    street_address = models.TextField()
+    apartment_address = models.TextField()
+    countries = CountryField(multiple=True)
+    zip = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.username
 
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
