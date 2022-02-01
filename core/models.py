@@ -99,7 +99,7 @@ class BillingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     street_address = models.TextField()
     apartment_address = models.TextField()
-    countries = CountryField(multiple=True)
+    country = CountryField(multiple=False)
     zip = models.CharField(max_length=100)
 
     def __str__(self):
