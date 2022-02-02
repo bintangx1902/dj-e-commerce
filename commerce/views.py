@@ -8,6 +8,10 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .forms import CheckoutForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class HomeView(ListView):
@@ -87,6 +91,17 @@ class CheckoutView(View, LoginRequiredMixin):
 class PaymentView(View):
     def get(self, *args, **kwargs):
         return render(self.request, 'payment.html')
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+
+        token = self.request.GET.get('stripeToken')
+        stripe.Charge.create(
+            amount=order.get_total(),
+            currency="idr",
+            source=token,
+        )
+        order.ordered = True
 
 
 @login_required(login_url='/accounts/login/')
