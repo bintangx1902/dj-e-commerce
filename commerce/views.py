@@ -105,42 +105,46 @@ class PaymentView(View):
                 source=token,
             )
 
+            order.ordered = True
+            payment = Payment()
+            payment.stripe_charge_id = charge.id
+            payment.user = self.request.user
+            payment.amount = amount
+            payment.save()
+
+            messages.success(self.request, " Your order was successful ! ")
+
         except stripe.error.CardError as e:
             # Since it's a decline, stripe.error.CardError will be caught
+            messages.error(self.request, f'{e.user_message} - code : {e.code}')
 
-            print('Status is: %s' % e.http_status)
-            print('Code is: %s' % e.code)
+            # print('Status is: %s' % e.http_status)
+            # print('Code is: %s' % e.code)
             # param is '' in this case
-            print('Param is: %s' % e.param)
-            print('Message is: %s' % e.user_message)
+            # print('Param is: %s' % e.param)
+            # print('Message is: %s' % e.user_message)
         except stripe.error.RateLimitError as e:
-            # Too many requests made to the API too quickly
-            pass
+            messages.error(self.request, "Rate limit error ! ")
+
         except stripe.error.InvalidRequestError as e:
-            # Invalid parameters were supplied to Stripe's API
-            pass
+            messages.error(self.request, "Invalid Parameters")
+
         except stripe.error.AuthenticationError as e:
-            # Authentication with Stripe's API failed
-            # (maybe you changed API keys recently)
-            pass
+            messages.error(self.request, "Not Authenticated")
+
         except stripe.error.APIConnectionError as e:
-            # Network communication with Stripe failed
-            pass
+            messages.error(self.request, "Network error ")
+
         except stripe.error.StripeError as e:
-            # Display a very generic error to the user, and maybe send
-            # yourself an email
-            pass
+            messages.error(self.request, "Something went wrong. You were not charged. Please try again later! ")
+
         except Exception as e:
-            # Something else happened, completely unrelated to Stripe
-            pass
+            messages.error(self.request, "Serious error occurred. we have been notified")
         # end handling
 
-        order.ordered = True
-        payment = Payment()
-        payment.stripe_charge_id = charge.id
-        payment.user = self.request.user
-        payment.amount = amount
-        payment.save()
+        return redirect('/')
+
+
 
 
 @login_required(login_url='/accounts/login/')
