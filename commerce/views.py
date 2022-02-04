@@ -10,6 +10,7 @@ from .forms import CheckoutForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import stripe
+from django.core.exceptions import ObjectDoesNotExist
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -72,16 +73,16 @@ class CheckoutView(View, LoginRequiredMixin):
                     street_address=street_address,
                     apartment_address=apartment_address,
                     country=country,
-                    zip_code=zip_code
+                    zip=zip_code
                 )
                 bil_add.save()
                 order.billing_address = bil_add
                 order.save()
 
                 if payment_option == 'S':
-                    return reverse('com:payment', kwargs={'payment_method': "Stripe"})
+                    return HttpResponseRedirect(reverse('com:payment', args=['Stripe']))
                 elif payment_option == 'P':
-                    return reverse('com:payment', kwargs={'payment_method': "PayPal"})
+                    return HttpResponseRedirect(reverse('com:payment', kwargs={'payment_method': "PayPal"}))
                 else:
                     messages.warning(self.request, "Invalid payment options ")
 
@@ -95,7 +96,11 @@ class CheckoutView(View, LoginRequiredMixin):
 
 class PaymentView(View):
     def get(self, *args, **kwargs):
-        return render(self.request, 'com/payment.html')
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        context = {
+            'order': order
+        }
+        return render(self.request, 'com/payment.html', context)
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
