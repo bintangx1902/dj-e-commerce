@@ -90,7 +90,7 @@ class CheckoutView(View, LoginRequiredMixin):
 
 class PaymentView(View):
     def get(self, *args, **kwargs):
-        return render(self.request, 'payment.html')
+        return render(self.request, 'com/payment.html')
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
