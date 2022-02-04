@@ -78,7 +78,12 @@ class CheckoutView(View, LoginRequiredMixin):
                 order.billing_address = bil_add
                 order.save()
 
-                return redirect('com:checkout')
+                if payment_option == 'S':
+                    return reverse('com:payment', kwargs={'payment_method': "Stripe"})
+                elif payment_option == 'P':
+                    return reverse('com:payment', kwargs={'payment_method': "PayPal"})
+                else:
+                    messages.warning(self.request, "Invalid payment options ")
 
         except ObjectDoesNotExist:
             messages.error(self.request, "You dont have an active order ! ")
@@ -95,7 +100,7 @@ class PaymentView(View):
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         token = self.request.GET.get('stripeToken')
-        amount = order.get_total()
+        amount = int(order.get_total())
 
         # error handling
         try:
@@ -143,8 +148,6 @@ class PaymentView(View):
         # end handling
 
         return redirect('/')
-
-
 
 
 @login_required(login_url='/accounts/login/')
