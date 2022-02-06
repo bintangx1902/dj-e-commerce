@@ -55,7 +55,9 @@ LOGIN_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STRIPE_SECRET_KEY = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
+STRIPE_SECRET_KEY = 'sk_test_51KPkPJBfPVLRRhOZTEeYNMUQjxjHJ8T24YFNPL5eP1cunKhdnTsGBoENxTzvxmRA2S1xR5BPHr8g01FHdNp7qHfP00KDMhDLzE'
+STRIPE_PUBLIC_KEY = ""
+STRIPE_WEBHOOK_SECRET = ""
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -4,7 +4,7 @@ from core.models import Item, OrderItem, Order, BillingAddress, Payment
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from .forms import CheckoutForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -153,6 +153,29 @@ class PaymentView(View):
         # end handling
 
         return redirect('/')
+
+
+class CreateCheckoutSessionView(View):
+    def post(self, *args, **kwargs):
+        host = self.request.gethost()
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': {
+                        'currency': 'usd',
+                        'unit_amount': 1000,
+                        'product_data': {
+                            'name': 'order',
+                        }
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=f"http://{host}{reverse('com:payment-success')}",
+            cancel_url=f"http://{host}{reverse('com:payment-cancel')}",
+        )
 
 
 @login_required(login_url='/accounts/login/')
