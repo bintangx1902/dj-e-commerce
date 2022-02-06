@@ -157,12 +157,12 @@ class PaymentView(View):
 
 class CreateCheckoutSessionView(View):
     def post(self, *args, **kwargs):
-        host = self.request.gethost()
+        host = self.request.get_host()
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': {
+                    'price_data': {
                         'currency': 'usd',
                         'unit_amount': 1000,
                         'product_data': {
@@ -176,6 +176,15 @@ class CreateCheckoutSessionView(View):
             success_url=f"http://{host}{reverse('com:payment-success')}",
             cancel_url=f"http://{host}{reverse('com:payment-cancel')}",
         )
+        return redirect(checkout_session.url, code=303)
+
+
+class PaymentSuccess(TemplateView):
+    template_name = None
+
+
+class PaymentCancel(TemplateView):
+    template_name = None
 
 
 @login_required(login_url='/accounts/login/')
