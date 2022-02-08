@@ -104,53 +104,9 @@ class PaymentView(View):
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        token = self.request.GET.get('stripeToken')
         amount = int(order.get_total())
 
-        # error handling
-        try:
-            charge = stripe.Charge.create(
-                amount=amount,
-                currency="idr",
-                source=token,
-            )
 
-            order.ordered = True
-            payment = Payment()
-            payment.stripe_charge_id = charge.id
-            payment.user = self.request.user
-            payment.amount = amount
-            payment.save()
-
-            messages.success(self.request, " Your order was successful ! ")
-
-        except stripe.error.CardError as e:
-            # Since it's a decline, stripe.error.CardError will be caught
-            messages.error(self.request, f'{e.user_message} - code : {e.code}')
-
-            # print('Status is: %s' % e.http_status)
-            # print('Code is: %s' % e.code)
-            # param is '' in this case
-            # print('Param is: %s' % e.param)
-            # print('Message is: %s' % e.user_message)
-        except stripe.error.RateLimitError as e:
-            messages.error(self.request, "Rate limit error ! ")
-
-        except stripe.error.InvalidRequestError as e:
-            messages.error(self.request, "Invalid Parameters")
-
-        except stripe.error.AuthenticationError as e:
-            messages.error(self.request, "Not Authenticated")
-
-        except stripe.error.APIConnectionError as e:
-            messages.error(self.request, "Network error ")
-
-        except stripe.error.StripeError as e:
-            messages.error(self.request, "Something went wrong. You were not charged. Please try again later! ")
-
-        except Exception as e:
-            messages.error(self.request, "Serious error occurred. we have been notified")
-        # end handling
 
         return redirect('/')
 
@@ -158,15 +114,17 @@ class PaymentView(View):
 class CreateCheckoutSessionView(View):
     def post(self, *args, **kwargs):
         host = self.request.get_host()
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        amount = int(order.get_total())
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
                     'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': 1000,
+                        'currency': 'idr',
+                        'unit_amount': amount * 100,  # amount * usd_cents,
                         'product_data': {
-                            'name': 'order',
+                            'name': f"Billing for ",
                         }
                     },
                     'quantity': 1,
