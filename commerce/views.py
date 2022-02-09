@@ -106,8 +106,6 @@ class PaymentView(View):
         order = Order.objects.get(user=self.request.user, ordered=False)
         amount = int(order.get_total())
 
-
-
         return redirect('/')
 
 
@@ -139,8 +137,9 @@ class CreateCheckoutSessionView(View):
 
 class PaymentSuccess(View):
     template_name = 'com/pay/success.html'
+
     def get(self, *args, **kwargs):
-        return render(self.request, template_name)
+        return render(self.request, self.template_name)
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
@@ -208,6 +207,7 @@ def remove_from_cart(request, item_slug):
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 
 
+@login_required(login_url='accounts/login/')
 def reduce_item(request, item_slug):
     url = request.GET.get('url')
     item = get_object_or_404(Item, item_slug=item_slug)

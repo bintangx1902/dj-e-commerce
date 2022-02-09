@@ -116,6 +116,13 @@ class Payment(models.Model):
     def __str__(self): return self.user.username
 
 
+class Coupon(models.Model):
+    code = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.code
+
+
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
         userprofile = UserProfile.objects.create(user=instance)

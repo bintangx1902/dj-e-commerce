@@ -13,6 +13,8 @@ line 4 to line 15 is prepared if the application is ready for hosting
 # SECURE_CONTENT_TYPE_NOSNIFF = False
 # SECURE_BROWSER_XSS_FILTER = False
 # SESSION_COOKIE_HTTPONLY = False
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 60 * 60
 
 
 # from pathlib import Path
