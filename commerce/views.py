@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, reverse, render, redirect
 from django.views.generic import *
-from core.models import Item, OrderItem, Order, BillingAddress, Payment
+from core.models import Item, OrderItem, Order, BillingAddress, Payment, Coupon
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -229,3 +229,22 @@ def reduce_item(request, item_slug):
     if url is not None:
         return HttpResponseRedirect(redirect_to=url)
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
+
+
+def get_coupon(request, code):
+    try:
+        coupon = Coupon.objects.get(code=code)
+        return coupon
+    except ObjectDoesNotExist:
+        messages.info(request, "This coupon does not exist")
+        return redirect('com:checkout')
+
+
+def add_coupon(request, code):
+    try:
+        order = Order.objects.ge(user=request.user, ordered=False)
+        coupon = get_coupon(request, code)
+
+    except ObjectDoesNotExist:
+        messages.info(request, "You dont have an active order")
+        return redirect('com:checkout')
