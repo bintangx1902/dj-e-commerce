@@ -137,12 +137,21 @@ class CreateCheckoutSessionView(View):
         return redirect(checkout_session.url, code=303)
 
 
-class PaymentSuccess(TemplateView):
-    template_name = None
+class PaymentSuccess(View):
+    template_name = 'com/pay/success.html'
+    def get(self, *args, **kwargs):
+        return render(self.request, template_name)
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        order_items = order.items.all()
+        order_items.update(ordered=True)
+        for item in order_items:
+            item.save()
 
 
 class PaymentCancel(TemplateView):
-    template_name = None
+    template_name = 'com/pay/cancel.html'
 
 
 @login_required(login_url='/accounts/login/')
