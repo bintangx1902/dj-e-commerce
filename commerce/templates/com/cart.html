@@ -10,57 +10,59 @@
                 <a href="" class="btn btn-primary">Back</a>
             </div>
             <div class="card-body">
-                <table class="table">
-                    <thead class="thead-light">
-                    <tr>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total Price</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items.item.all %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ item.item.title }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>Rp. {{ item.item.price }}</td>
+                                <td>
+                                    {% if item.item.discount %}
+                                    Rp. {{ item.get_total_item_discount_price }} <small class="text-small text-secondary">Hemat Rp. {{ item.get_amount_saved }}</small>
+                                    {% else %}
+                                    Rp. { item.get_total_item_price }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ item.item.get_add_to_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-primary">+1</a>
+                                    <a href="{{ item.item.get_reduce_item_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger">-1</a>
+                                    <a href="{{ item.item.get_remove_from_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5"> Your Cart is Empty</td>
+                            </tr>
+                            {% endfor %}
+                            {% if items.get_total %}
+                            <tr>
+                                <td colspan="4">Total Price :</td>
+                                <td>Rp. {{ items.get_total }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <a href="{% url 'com:checkout' %}" class="btn btn-warning float-right ml-2"> Checkout </a>
+                                    <a href="" class="btn btn-primary float-right "> Shop More </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
 
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Total Price</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items.item.all %}
-                        <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ item.item.title }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>Rp. {{ item.item.price }}</td>
-                            <td>
-                                {% if item.item.discount %}
-                                Rp. {{ item.get_total_item_discount_price }} <small class="text-small text-secondary">Hemat Rp. {{ item.get_amount_saved }}</small>
-                                {% else %}
-                                Rp. { item.get_total_item_price }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{{ item.item.get_add_to_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-primary">+1</a>
-                                <a href="{{ item.item.get_reduce_item_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger">-1</a>
-                                <a href="{{ item.item.get_remove_from_cart_url }}?url={% url 'com:order-summary' %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5"> Your Cart is Empty</td>
-                        </tr>
-                        {% endfor %}
-                        {% if items.get_total %}
-                        <tr>
-                            <td colspan="4">Total Price : </td>
-                            <td>Rp. {{ items.get_total }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <a href="{% url 'com:checkout' %}" class="btn btn-warning float-right ml-2"> Checkout </a>
-                                <a href="" class="btn btn-primary float-right "> Shop More </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

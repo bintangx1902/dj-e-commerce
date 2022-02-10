@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="container wow fadeIn">
-    <h2 class="my-5 h2 text-center">Payment</h2>
-    <form action="{% url 'com:create-payment-session' 'Stripe' %}" method="post">
-        {% csrf_token %}
-        <button class="btn btn-primary">Create bill</button>
-    </form>
-
+<div class="row mx-auto my-5">
+    {% include 'com/order_snippet.html' %}
+    <div class="col-10 col-lg-10 mx-auto">
+        <form action="{% url 'com:create-payment-session' 'stripe' %}" method="post">
+            <button class="btn btn-primary">Create Bill</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
