@@ -47,11 +47,15 @@ class OrderSummaryView(ListView):
 
 class CheckoutView(View, LoginRequiredMixin):
     def get(self, *args, **kwargs):
-        form = CheckoutForm()
-        context = {
-            'form': form
-        }
-        return render(self.request, 'com/checkout.html', context)
+        try:
+            form = CheckoutForm()
+            context = {
+                'form': form
+            }
+            return render(self.request, 'com/checkout.html', context)
+        except ObjectDoesNotExist:
+            messages.info(self.request, "You dont have an active order! ")
+            return redirect('/')
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -101,12 +105,6 @@ class PaymentView(View):
             'order': order
         }
         return render(self.request, 'com/payment.html', context)
-
-    def post(self, *args, **kwargs):
-        order = Order.objects.get(user=self.request.user, ordered=False)
-        amount = int(order.get_total())
-
-        return redirect('/')
 
 
 class CreateCheckoutSessionView(View):
@@ -240,13 +238,17 @@ def get_coupon(request, code):
         return redirect('com:checkout')
 
 
-def add_coupon(request, code):
-    try:
-        order = Order.objects.ge(user=request.user, ordered=False)
-        order.coupon = get_coupon(request, code)
-        order.save()
-        messages.success(request, "Successfully added coupon! ")
-        return redirect('com:checkout')
-    except ObjectDoesNotExist:
-        messages.info(request, "You dont have an active order")
-        return redirect('com:checkout')
+def add_coupon(request):
+    if request.method == "POST":
+        try:
+            code = request.POST.get('code')
+            order = Order.objects.ge(user=request.user, ordered=False)
+            order.coupon = get_coupon(request, code)
+            order.save()
+            messages.success(request, "Successfully added coupon! ")
+            return redirect('com:checkout')
+        except ObjectDoesNotExist:
+            messages.info(request, "You dont have an active order")
+            return redirect('com:checkout')
+    # TODO : handling error
+    return None

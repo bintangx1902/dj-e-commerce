@@ -12,9 +12,17 @@
 {% block content %}
 <div class="row mx-auto my-5">
     {% include 'com/order_snippet.html' %}
-    <div class="col-10 col-lg-10 mx-auto">
+    <div class="col-10 col-lg-10 mx-auto mt-3">
+        <form class="form form-row" action="{% url  'com:add-coupon' %}">
+            <div class="form-group col-lg-9 col-9">
+                <input type="text" name="code" id="code" class="form-control" placeholder="Promo Code ">
+            </div>
+            <div class="form-group col-lg-3 col-3">
+                <button class="btn btn-primary">Add Coupon</button>
+            </div>
+        </form>
         <form action="{% url 'com:create-payment-session' 'stripe' %}" method="post">
-            <button class="btn btn-primary">Create Bill</button>
+            <button class="btn btn-primary col">Create Bill</button>
         </form>
     </div>
 </div>
