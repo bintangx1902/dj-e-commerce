@@ -5,6 +5,7 @@ from django.conf import settings
 from os import remove, path
 from django.urls import reverse
 from django_countries.fields import CountryField
+from django_countries import countries
 
 
 class UserProfile(models.Model):
