@@ -94,6 +94,9 @@ class Order(models.Model):
         total = 0
         for o_item in self.item.all():
             total += o_item.get_final_price()
+        if self.coupon:
+            discount = self.coupon.disc_amount / 100
+            total -= (total * discount)
         return total
 
 
@@ -119,6 +122,7 @@ class Payment(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=255)
+    disc_amount = models.IntegerField(default=0, verbose_name='Discount in percent ')
 
     def __str__(self):
         return self.code

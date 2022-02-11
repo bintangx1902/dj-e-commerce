@@ -20,6 +20,12 @@
                             <td>{{ item.get_final_price }}</td>
                         </tr>
                         {% endfor %}
+                        {% if order.coupon %}
+                            <tr>
+                                <td colspan="3">Coupon :</td>
+                                <td>{{ order.coupon }} - Discount :  {{ order.coupon.disc_amount }}%</td>
+                            </tr>
+                        {% endif %}
                         {% if order.get_total %}
                             <tr>
                                 <td colspan="3">Total Price :</td>

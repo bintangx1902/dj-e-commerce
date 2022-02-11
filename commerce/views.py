@@ -102,9 +102,14 @@ class PaymentView(View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         context = {
-            'order': order
+            'order': order,
+            'uri': self.request.build_absolute_uri()
         }
         return render(self.request, 'com/payment.html', context)
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(PaymentView, self).dispatch(request, *args, **kwargs)
 
 
 class CreateCheckoutSessionView(View):
@@ -131,6 +136,10 @@ class CreateCheckoutSessionView(View):
             cancel_url=f"http://{host}{reverse('com:payment-cancel')}",
         )
         return redirect(checkout_session.url, code=303)
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(CreateCheckoutSessionView, self).dispatch(request, *args, **kwargs)
 
 
 class PaymentSuccess(View):
@@ -238,17 +247,18 @@ def get_coupon(request, code):
         return redirect('com:checkout')
 
 
-def add_coupon(request):
-    if request.method == "POST":
+class AddCoupon(View):
+    def post(self, *args, **kwargs):
+        url = self.request.POST.get('url')
+        code = self.request.POST.get('code')
         try:
-            code = request.POST.get('code')
-            order = Order.objects.ge(user=request.user, ordered=False)
-            order.coupon = get_coupon(request, code)
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            order.coupon = get_coupon(self.request, code)
             order.save()
-            messages.success(request, "Successfully added coupon! ")
-            return redirect('com:checkout')
+            messages.success(self.request, "Successfully added coupon! ")
+            return HttpResponseRedirect(url)
         except ObjectDoesNotExist:
-            messages.info(request, "You dont have an active order")
-            return redirect('com:checkout')
-    # TODO : handling error
-    return None
+            messages.info(self.request, "You dont have an active order")
+            return HttpResponseRedirect(url)
+        # TODO : handling error
+
