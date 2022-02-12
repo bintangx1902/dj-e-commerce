@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'django_countries',
     'ckeditor',
 
-    'commerce',
     'core',
+    'commerce',
 ]
 
 SITE_ID = 1

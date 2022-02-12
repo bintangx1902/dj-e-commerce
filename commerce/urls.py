@@ -5,6 +5,7 @@ app_name = 'com'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('profile', Profile.as_view(), name='profile'),
     path('order/', OrderSummaryView.as_view(), name='order-summary'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('add-coupon/', AddCoupon.as_view(), name='add-coupon'),

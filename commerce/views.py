@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import stripe
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -238,6 +239,7 @@ def reduce_item(request, item_slug):
     return HttpResponseRedirect(reverse('com:item-detail', kwargs={'item_slug': item_slug}))
 
 
+@login_required(login_url='/accounts/login/')
 def get_coupon(request, code):
     try:
         coupon = Coupon.objects.get(code=code)
@@ -262,3 +264,21 @@ class AddCoupon(View):
             return HttpResponseRedirect(url)
         # TODO : handling error
 
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(AddCoupon, self).dispatch(request, *args, **kwargs)
+
+
+class Profile(View):
+    template_name = 'com/profile.html'
+
+    def get(self, *args, **kwargs):
+        user = get_object_or_404(User, pk=self.request.user.pk)
+        context = {
+            'user': user
+        }
+        return render(self.request, self.template_name, context)
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(Profile, self).dispatch(request, *args, **kwargs)
