@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
-from .forms import CheckoutForm
+from .forms import CheckoutForm, AddressForm
 from .models import Address
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
@@ -49,7 +49,7 @@ class OrderSummaryView(ListView):
 
 class CreateAddressView(CreateView):
     template_name = 'com/forms.html'
-    form_class = None
+    form_class = AddressForm
     model = Address
 
     def get_success_url(self):
