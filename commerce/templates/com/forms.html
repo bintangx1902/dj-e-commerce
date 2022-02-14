@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
         {{ form.media }}
         {{ form | crispy }}
         <div class="form-group">
-            <button class="btn btn-primary"></button>
+            <button class="btn btn-primary"> Save </button>
         </div>
     </form>
 </div>

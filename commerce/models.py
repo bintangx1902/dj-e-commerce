@@ -30,6 +30,7 @@ class ItemComment(models.Model):
 
 class Address(models.Model):
     post_code = models.CharField(max_length=255)
+    address_link = models.SlugField(default='', max_length=255)
     main_address = models.TextField()
     detailed_address = models.CharField(max_length=255)
     mark_as = models.CharField(default='R', max_length=10, choices=mark)

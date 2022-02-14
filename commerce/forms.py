@@ -16,4 +16,10 @@ class CheckoutForm(forms.Form):
 class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ['post_code', 'main_address', 'detailed_address', 'mark_as']
+
+
+class UpdateAddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['post_code', 'main_address', 'detailed_address', 'mark_as', 'default']

@@ -6,13 +6,14 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
-from .forms import CheckoutForm, AddressForm
+from .forms import CheckoutForm, AddressForm, UpdateAddressForm
 from .models import Address
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import stripe
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from .utils import user_address_check
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -55,9 +56,25 @@ class CreateAddressView(CreateView):
     def get_success_url(self):
         return reverse('com:profile')
 
+    def form_valid(self, form):
+        default = False if user_address_check(self.request) else True
+        form.instance.user = self.request.user
+        form.instance.default = default
+        return super(CreateAddressView, self).form_valid(form)
+
     @method_decorator(login_required(login_url='/accounts/login/'))
     def dispatch(self, request, *args, **kwargs):
         return super(CreateAddressView, self).dispatch(request, *args, **kwargs)
+
+
+class UpdateAddressView(UpdateView, LoginRequiredMixin):
+    template_name = 'com/forms.html'
+    model = Address
+    query_pk_and_slug = True
+    form_class = UpdateAddressForm
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(UpdateAddressView, self).dispatch(request, *args, **kwargs)
 
 
 class CheckoutView(View, LoginRequiredMixin):
