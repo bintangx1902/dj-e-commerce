@@ -13,7 +13,7 @@ from django.conf import settings
 import stripe
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-from .utils import user_address_check
+from .utils import user_address_check, address_link_generator
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -60,6 +60,7 @@ class CreateAddressView(CreateView):
         default = False if user_address_check(self.request) else True
         form.instance.user = self.request.user
         form.instance.default = default
+        form.instance.address_link = f"{self.request.user}-{address_link_generator()}"
         return super(CreateAddressView, self).form_valid(form)
 
     @method_decorator(login_required(login_url='/accounts/login/'))
@@ -72,9 +73,20 @@ class UpdateAddressView(UpdateView, LoginRequiredMixin):
     model = Address
     query_pk_and_slug = True
     form_class = UpdateAddressForm
+    slug_url_kwarg = 'address_link'
+    slug_field = 'address_link'
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(UpdateAddressView, self).dispatch(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse('com:profile')
+
+    def form_valid(self, form):
+        default = form.cleaned_data['default']
+        address = Address.objects.get(user=self.request.user, default=True)
+        if default:
+            if address:
+                address.default = False
+                address.save()
+        return super(UpdateAddressView, self).form_valid(form)
 
 
 class CheckoutView(View, LoginRequiredMixin):
