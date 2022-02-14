@@ -59,44 +59,45 @@ class CheckoutView(View, LoginRequiredMixin):
             return redirect('/')
 
     def post(self, *args, **kwargs):
-        form = CheckoutForm(self.request.POST or None)
-
-        try:
-            order = Order.objects.get(user=self.request.user, ordered=False)
-
-            if form.is_valid():
-                street_address = form.cleaned_data.get('street_address')
-                apartment_address = form.cleaned_data.get('apartment_address')
-                country = form.cleaned_data.get('country')
-                zip_code = form.cleaned_data.get('zip_code')
-                same_billing_address = form.cleaned_data.get('same_billing_address')
-                save_info = form.cleaned_data.get('save_info')
-                payment_option = form.cleaned_data.get('payment_option')
-
-                bil_add = BillingAddress(
-                    user=self.request.user,
-                    street_address=street_address,
-                    apartment_address=apartment_address,
-                    country=country,
-                    zip=zip_code
-                )
-                bil_add.save()
-                order.billing_address = bil_add
-                order.save()
-
-                if payment_option == 'S':
-                    return HttpResponseRedirect(reverse('com:payment', args=['Stripe']))
-                elif payment_option == 'P':
-                    return HttpResponseRedirect(reverse('com:payment', kwargs={'payment_method': "PayPal"}))
-                else:
-                    messages.warning(self.request, "Invalid payment options ")
-
-        except ObjectDoesNotExist:
-            messages.error(self.request, "You dont have an active order ! ")
-            return redirect('com:order-summary')
-
-        messages.warning(self.request, "Checkout Failed")
-        return redirect('com:checkout')
+        pass
+        # form = CheckoutForm(self.request.POST or None)
+        #
+        # try:
+        #     order = Order.objects.get(user=self.request.user, ordered=False)
+        #
+        #     if form.is_valid():
+        #         street_address = form.cleaned_data.get('street_address')
+        #         apartment_address = form.cleaned_data.get('apartment_address')
+        #         country = form.cleaned_data.get('country')
+        #         zip_code = form.cleaned_data.get('zip_code')
+        #         same_billing_address = form.cleaned_data.get('same_billing_address')
+        #         save_info = form.cleaned_data.get('save_info')
+        #         payment_option = form.cleaned_data.get('payment_option')
+        #
+        #         bil_add = BillingAddress(
+        #             user=self.request.user,
+        #             street_address=street_address,
+        #             apartment_address=apartment_address,
+        #             country=country,
+        #             zip=zip_code
+        #         )
+        #         bil_add.save()
+        #         order.billing_address = bil_add
+        #         order.save()
+        #
+        #         if payment_option == 'S':
+        #             return HttpResponseRedirect(reverse('com:payment', args=['Stripe']))
+        #         elif payment_option == 'P':
+        #             return HttpResponseRedirect(reverse('com:payment', kwargs={'payment_method': "PayPal"}))
+        #         else:
+        #             messages.warning(self.request, "Invalid payment options ")
+        #
+        # except ObjectDoesNotExist:
+        #     messages.error(self.request, "You dont have an active order ! ")
+        #     return redirect('com:order-summary')
+        #
+        # messages.warning(self.request, "Checkout Failed")
+        # return redirect('com:checkout')
 
 
 class PaymentView(View):

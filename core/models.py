@@ -84,7 +84,7 @@ class Order(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
-    billing_address = models.ForeignKey('BillingAddress', on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.ForeignKey('commerce.Address', on_delete=models.SET_NULL, blank=True, null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
 
@@ -100,7 +100,7 @@ class Order(models.Model):
             total -= (total * discount)
         return total
 
-
+"""
 class BillingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     street_address = models.TextField()
@@ -110,7 +110,7 @@ class BillingAddress(models.Model):
 
     def __str__(self):
         return self.user.username
-
+"""
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)

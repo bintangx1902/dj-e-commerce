@@ -1,13 +1,15 @@
 from django.urls import path
 from .views import *
 
+# TODO : we didnt need billing address anymore, we changed to address to save the payment and shipping 
+
 app_name = 'com'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('profile', Profile.as_view(), name='profile'),
     path('order/', OrderSummaryView.as_view(), name='order-summary'),
-    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    # path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('add-coupon/', AddCoupon.as_view(), name='add-coupon'),
     path('payment/success', PaymentSuccess.as_view(), name='payment-success'),
     path('payment/cancel', PaymentCancel.as_view(), name='payment-cancel'),
