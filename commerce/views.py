@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, reverse, render, redirect
 from django.views.generic import *
-from core.models import Item, OrderItem, Order, BillingAddress, Payment, Coupon
+from core.models import Item, OrderItem, Order, Payment, Coupon
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from .forms import CheckoutForm
+from .models import Address
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import stripe
@@ -46,12 +47,27 @@ class OrderSummaryView(ListView):
         return super(OrderSummaryView, self).dispatch(request, *args, **kwargs)
 
 
+class CreateAddressView(CreateView):
+    template_name = 'com/forms.html'
+    form_class = None
+    model = Address
+
+    def get_success_url(self):
+        return reverse('com:profile')
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(CreateAddressView, self).dispatch(request, *args, **kwargs)
+
+
 class CheckoutView(View, LoginRequiredMixin):
     def get(self, *args, **kwargs):
         try:
             form = CheckoutForm()
+            address = Address.objects.filter(user=self.request.user)
             context = {
-                'form': form
+                'form': form,
+                'address': address
             }
             return render(self.request, 'com/checkout.html', context)
         except ObjectDoesNotExist:

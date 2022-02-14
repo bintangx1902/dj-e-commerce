@@ -37,4 +37,6 @@ class Address(models.Model):
     default = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user}'s address"
+        if self.default:
+            return f"{self.user}'s main address"
+        return f"{self.user}'s address "

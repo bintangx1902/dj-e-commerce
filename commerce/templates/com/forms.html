@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form | crispy }}
+        <div class="form-group">
+            <button class="btn btn-primary"></button>
+        </div>
+    </form>
+</div>
+{% endblock %}
