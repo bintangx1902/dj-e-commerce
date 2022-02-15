@@ -57,10 +57,13 @@ class CreateAddressView(CreateView):
         return reverse('com:profile')
 
     def form_valid(self, form):
+        link_list = [add.address_link for add in Address.objects.all()]
         default = False if user_address_check(self.request) else True
         form.instance.user = self.request.user
         form.instance.default = default
-        form.instance.address_link = f"{self.request.user}-{address_link_generator()}"
+        code = address_link_generator()
+        if code in link_list: pass
+        form.instance.address_link = f"{self.request.user}-{code}"
         return super(CreateAddressView, self).form_valid(form)
 
     @method_decorator(login_required(login_url='/accounts/login/'))

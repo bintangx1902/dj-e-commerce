@@ -17,3 +17,10 @@ def address_link_generator():
     letter = string.ascii_letters
     raw = letter + num
     return ''.join(random.sample(raw, 16))
+
+
+def code_list():
+    link_list = [add.address_link for add in Address.objects.all()]
+    for x in link_list:
+        code = x.split('-')
+

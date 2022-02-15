@@ -34,9 +34,6 @@ class Item(models.Model):
     def __str__(self):
         return self.title
 
-    def get_add_to_cart_url(self):
-        return
-
     def get_absolute_url(self):
         return reverse('com:item-detail', kwargs={'item_slug': self.item_slug})
 
@@ -100,6 +97,7 @@ class Order(models.Model):
             total -= (total * discount)
         return total
 
+
 """
 class BillingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -111,6 +109,7 @@ class BillingAddress(models.Model):
     def __str__(self):
         return self.user.username
 """
+
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
