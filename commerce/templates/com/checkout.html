@@ -10,12 +10,18 @@
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="form-check">
-                        {% for add in address %}
-                        <input type="radio" name="address" id="radio-{{ add.pk }}" class="form-check-input">
-                        <label for="radio-{{ add.pk }}" class="form-check-label">{{ add }}</label>
-                        {% endfor %}
+                    <div class="form-group">
+                        <label> Address </label>
+                        <div>
+                            {% for add in address %}
+                            <div class="form-check">
+                                <input type="radio" name="address" id="radio-{{ add.pk }}" class="form-check-input" value="{{ add.pk }}">
+                                <label for="radio-{{ add.pk }}" class="form-check-label">{{ add.main_address }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
+
 
                     {{ form | crispy }}
                     <div class="form-group">
