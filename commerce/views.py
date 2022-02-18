@@ -258,7 +258,7 @@ def reduce_item(request, item_slug):
         if order.item.filter(item__item_slug=item.item_slug).exists():
             order_item = OrderItem.objects.filter(item=item, user=request.user, ordered=False).first()
             if order_item.quantity == 1:
-                return reverse('com:remove-from-cart', kwargs={'item_slug': item_slug})
+                return redirect(f"/remove-from-cart/{item_slug}?url=/order/")
             order_item.quantity -= 1
             order_item.save()
             messages.info(request, "This item was reduce from your cart")
